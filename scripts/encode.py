@@ -13,7 +13,7 @@ core = vs.core
 
 source_clip_path = r''  # The path of source clip
 encode_clip_path = r''  # The path of encode clip
-target_clip_path = r''  # The path of target clip
+target_clip_path = [r'','Target']  # First is The path of target clip and the second is the target clip's name
 test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
 sample_comparison = False  # True if you want to comparison sample clip
@@ -23,7 +23,7 @@ encode_comparison = False  # True if you want to make a source vs encode
 src = core.lsmas.LWLibavSource(source_clip_path).std.Crop(top=0, bottom=0, left=0,
                                                           right=0)  # Modify it with the pixels to crop!
 encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
-target = core.lsmas.LWLibavSource(target_clip_path) if encode_comparison else False
+target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison else False
 clip = depth(src, 16)
 
 # 2 Resize
@@ -56,8 +56,8 @@ if encode_comparison:
     filtered = awf.FrameInfo(filtered, 'Filtered')
     encode = awf.FrameInfo(encode, 'Encode')
     comparison_list = [src, encode]
-    if target_clip_path:
-        target = awf.FrameInfo(target, 'Target')  # Modify it if you want to specify the target clip's name
+    if target_clip_path[0]:
+        target = awf.FrameInfo(target, target_clip_path[1])
         comparison_list.append(target)
     comparison = core.std.Interleave(comparison_list)
     comparison.set_output()
