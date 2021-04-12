@@ -1,5 +1,6 @@
-FROM yyfyyf/vapoursynth-yuuno:v1.0
+FROM encodeguy/vapoursynth-yuuno:v0
 RUN apt install -y unzip\
+    && pip3 install git+https://git.concertos.live/AHD/awsmfunc.git\
     && curl https://rclone.org/install.sh | bash
 COPY vsplugin /usr/local/lib/vapoursynth/
 COPY bin /usr/bin/
