@@ -58,10 +58,10 @@ else:
 
 # 3 Sample Extract & Comparison
 if sample_extract:
+    filtered = awf.FrameInfo(filtered, 'Filtered') if sample_comparison else filtered # Tag original frameinfo if compare sample
     extract = awf.SelectRangeEvery(clip=filtered, every=3000, length=50,
                                    offset=960)  # Modify it with the length to extract!
     if sample_comparison:
-        extract = awf.FrameInfo(extract, 'Filtered')
         comparison = awf.InterleaveDir(folder=test_folder, PrintInfo=True, first=extract, repeat=True)
         depth(comparison, 8).set_output()
     else:
