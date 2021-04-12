@@ -25,20 +25,33 @@ encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else Fa
 target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison else False
 clip = depth(src, 16)
 
-# 2 Resize
-filtered = awf.zresize(clip, preset=720)
-filtered = awf.CropResize(clip=filtered, preset=720)
+# 2 Filtering
 
-# 3 Filtering
-filtered = awf.FillBorders(clip=filtered, top=1, left=1,
-                           right=1)  # For 1080p only. If you're working on 720, please consider using CropResize!
-mask = core.std.Binarize(clip, 5000)
-filtered = ptf.DebandReader(filtered, 'merged-banding-frames.txt', mask=mask)
+# 2.1 Dirty lines & Borders
+fix_borders = False
+if fix_borders:
+    filtered = awf.FillBorders(clip=clip, top=0, left=0,
+                               right=0,bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
+    filtered = awf.CropResize(clip=clip, preset=720) # Resize the cilp and fill borders
+else:
+    filtered = clip
+
+# 2.2 Resized
+resize = False
+if resize:
+    resized = awf.zresize(filtered, preset=720)
+else:
+    resized = filtered
+
+
+# 2.3 Deband & Deblock
+mask = core.std.Binarize(resized, 5000)
+filtered = ptf.DebandReader(resized, 'merged-banding-frames.txt', mask=mask)
 filtered = depth(filtered, 8)
 if sample_extract + encode_comparison is False:
     filtered.set_output()
 
-# 4 Sample Extract & Comparison
+# 3 Sample Extract & Comparison
 if sample_extract:
     extract = awf.SelectRangeEvery(clip=filtered, every=3000, length=50,
                                    offset=960)  # Modify it with the length to extract!
@@ -49,9 +62,9 @@ if sample_extract:
     else:
         depth(extract, 8).set_output()
 
-# 6 Source VS Encode
+# 4 Source VS Encode
 if encode_comparison:
-    src = awf.FrameInfo(src, 'Source')
+    src = awf.FrameInfo(src, 'Source') if not resize else awf.FrameInfo(depth(awf.zresize(filtered, preset=720),8), 'Source')
     filtered = awf.FrameInfo(filtered, 'Filtered')
     encode = awf.FrameInfo(encode, 'Encode')
     comparison_list = [src, encode]
