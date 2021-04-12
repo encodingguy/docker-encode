@@ -43,13 +43,18 @@ if resize:
 else:
     resized = filtered
 
-
 # 2.3 Deband & Deblock
-mask = core.std.Binarize(resized, 5000)
-filtered = ptf.DebandReader(resized, 'merged-banding-frames.txt', mask=mask)
-filtered = depth(filtered, 8)
-if sample_extract + encode_comparison is False:
-    filtered.set_output()
+deband = False
+if deband:
+    mask = core.std.Binarize(resized, 5000)
+    filtered = ptf.DebandReader(resized, 'merged-banding-frames.txt', mask=mask)
+else:
+    filtered = resized
+    
+# 2.4 Out!
+    filtered = depth(filtered, 8)
+    if sample_extract + encode_comparison is False:
+        filtered.set_output()
 
 # 3 Sample Extract & Comparison
 if sample_extract:
