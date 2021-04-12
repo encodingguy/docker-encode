@@ -8,6 +8,16 @@
 - mkvmerge: v53.0.0
 - mediainfo: v19.09
 - mktorrent: v1.1
+- rclone: v1.55.0
+- x264: x264-r3048-b86ae3c
+
+## Vapoursynth Plugins
+
+* [Adaptivegrain-rs v0.3.1](https://git.kageru.moe/kageru/adaptivegrain)
+* [RemapFrames v1.1](https://github.com/Irrational-Encoding-Wizardry/Vapoursynth-RemapFrames)
+
+## Vapoursynth Python Module
+* [awsmfunc](https://git.concertos.live/AHD/awsmfunc)
 
 ## How to build the environment
 
