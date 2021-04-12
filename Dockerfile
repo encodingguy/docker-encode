@@ -4,3 +4,4 @@ RUN apt install -y unzip\
     && curl https://rclone.org/install.sh | bash
 COPY vsplugin /usr/local/lib/vapoursynth/
 COPY bin /usr/bin/
+COPY ./ /root/dockerfile
