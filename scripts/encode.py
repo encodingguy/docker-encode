@@ -53,7 +53,7 @@ else:
     
 # 2.4 Out!
     filtered = depth(filtered, 8)
-    if sample_extract + encode_comparison is False:
+    if sample_extract is False and encode_comparison is False:
         filtered.set_output()
 
 # 3 Sample Extract & Comparison
