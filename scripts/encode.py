@@ -10,7 +10,6 @@ import pterfunc as ptf
 core = vs.core
 
 # 0 Encode Flag
-
 source_clip_path = r''  # The path of source clip
 encode_clip_path = r''  # The path of encode clip
 target_clip_path = [r'','Target']  # First is The path of target clip and the second is the target clip's name
