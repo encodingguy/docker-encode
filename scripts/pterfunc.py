@@ -10,9 +10,9 @@ import awsmfunc as awf
 import mvsfunc as mvf
 
 
-def solarcurve(input):
+def solarcurve(input,css='420'):
     core = vs.get_core()
-    clip=input
+    clip = input
 
     clip = mvf.ToRGB(clip,depth=8)
     pi = math.pi
@@ -33,7 +33,7 @@ def solarcurve(input):
     clip = core.std.Lut(clip=clip, planes=[0], function=curveR)
     clip = core.std.Lut(clip=clip, planes=[1], function=curveG)
     clip = core.std.Lut(clip=clip, planes=[2], function=curveB)
-    clip = mvf.ToYUV(clip,depth=8,css='420')
+    clip = mvf.ToYUV(clip,depth=8,css=css)
     return clip
 
 
