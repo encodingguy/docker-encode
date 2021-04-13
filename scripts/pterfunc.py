@@ -83,7 +83,7 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
     import os
 
     files = sorted(os.listdir(folder))
-
+    first = first if solar_curve is False else solarcurve(first)
     if first != None:
         sources = [first]
         j = 0
