@@ -52,6 +52,10 @@ else:
     filtered = resized
     
 # 2.4 Out!
+test = False
+if test:
+    '''Any test here'''
+else:
     filtered = depth(filtered, 8)
     if sample_extract is False and encode_comparison is False:
         filtered.set_output()
