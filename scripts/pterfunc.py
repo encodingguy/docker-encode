@@ -7,7 +7,7 @@ from vsutil import plane, get_subsampling, get_depth, split, join, scale_value
 from vsutil import depth as Depth
 from rekt import rektlvl, rektlvls, rekt_fast
 import awsmfunc as awf
-import mvsfunc as mvf
+import havsfunc as haf
 
 
 def solarcurve(clip, color='24'):
