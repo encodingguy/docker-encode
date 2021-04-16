@@ -179,4 +179,39 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
 
     return core.std.Interleave(sources)
 
+def debandmask(clip, lo=6144, hi=12288, lothr=320, hithr=384, mrad=2):
+    """A luma adraptive mask from https://pastebin.com/SHQZjVJ5
+     meant as a faster version of the retinex-type deband mask
+     lo and hi are the cutoffs for luma
+     lothr and hithr are the Binarize thresholds of the mask at lo/hi luma levels
+     luma values falling between lo and hi are scaled linearly from lothr to hithr""" 
+    f = clip.format
+    bits = f.bits_per_sample
+    isINT = f.sample_type==vs.INTEGER
+ 
+    peak = (1 << bits) - 1 if isINT else 1
+    clip = clip.std.ShufflePlanes(0, vs.GRAY)
+ 
+    ma = haf.mt_expand_multi(clip, mode='ellipse', sw=mrad, sh=mrad)
+    mi = haf.mt_inpand_multi(clip, mode='ellipse', sw=mrad, sh=mrad)
+ 
+    rmask = core.std.Expr([ma, mi], 'x y -')
+ 
+    mexpr = 'x {lo} < y {lothr} >= {peak} 0 ? x {hi} > y {hithr} >= {peak} 0 ? y x {lo} - {r} / {tr} * {lothr} + >= {peak} 0 ? ? ?'.format(lo=lo, hi=hi, lothr=lothr, hithr=hithr, peak=peak, r=hi-lo, tr=hithr-lothr)
+ 
+    return core.std.Expr([clip, rmask], mexpr)
 
+
+
+def multy(img,multy):
+    '''A simple tool to help generate screenshots, return a list need to take screenshots. Useful for comparison'''
+    out = img.copy()
+    for i in img:
+        a = 0
+        while a <= multy - 1:
+            if a == 0:
+                out.remove(i)
+            out.append(i*multy+a)
+            a += 1
+    out.sort()
+    return(out)
