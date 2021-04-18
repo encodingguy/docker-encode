@@ -56,15 +56,15 @@ def solarcurve(clip, color='24'):
 
     def solar48r(x):
         return round((127.9999 * math.sin(A * (x / 65535 * 255) ** 3 + B * ((x / 65535 * 255)) ** 2 + C * (
-        (x / 65535 * 255)) - math.pi / 2) + 127.5) ** 2)
+            (x / 65535 * 255)) - math.pi / 2) + 127.5) ** 2)
 
     def solar48g(x):
         return round((127.9999 * math.sin(A * ((x / 65535 * 255) - 5) ** 3 + B * ((x / 65535 * 255) - 5) ** 2 + C * (
-                    (x / 65535 * 255) - 5) - math.pi / 2) + 127.5) ** 2)
+                (x / 65535 * 255) - 5) - math.pi / 2) + 127.5) ** 2)
 
     def solar48b(x):
         return round((127.9999 * math.sin(A * ((x / 65535 * 255) + 5) ** 3 + B * ((x / 65535 * 255) + 5) ** 2 + C * (
-                    (x / 65535 * 255) + 5) - math.pi / 2) + 127.5) ** 2)
+                (x / 65535 * 255) + 5) - math.pi / 2) + 127.5) ** 2)
 
     if color == '24':
         return solar(clip)
@@ -106,8 +106,8 @@ def DebandReader(clip, csvfile, range=30, delimiter=' ', mask=None, luma_scaling
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. From awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
-      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>,**<strength_b>,**<strength_r>> <grain strength>
-      * grain is passed as grainy and grainc in the adptvgrnMod filter
+      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>,**<strength_b>,**<strength_r>> <grain strength> <mask>
+      * mask is the mask you want to apply. it should be in a list
       * range is passed as range in the f3kdb filter
     """
     import csv
@@ -118,6 +118,7 @@ def DebandReader(clip, csvfile, range=30, delimiter=' ', mask=None, luma_scaling
     with open(csvfile) as debandcsv:
         csvzones = csv.reader(debandcsv, delimiter=delimiter)
         for row in csvzones:
+            clip_mask = row[4]
             strength = row[2].split(',')
             while len(strength) < 3:
                 strength.append(strength[-1])
@@ -126,9 +127,8 @@ def DebandReader(clip, csvfile, range=30, delimiter=' ', mask=None, luma_scaling
                                    range=range, output_depth=depth)
             db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
             filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
-
-        if mask:
-            filtered = core.std.MaskedMerge(clip, filtered, mask)
+            if mask:
+                filtered = core.std.MaskedMerge(filtered, clip, mask[clip_mask])
 
     return filtered
 
