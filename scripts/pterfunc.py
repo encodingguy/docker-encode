@@ -162,7 +162,7 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
 
             j = j + 1
             sources.append(0)
-            sources[j] = core.ffms2.Source(folder + '/' + files[i])
+            sources[j] = core.lsmas.LWLibavSource(folder + '/' + files[i])
 
             if first != None:
                 sources[j] = core.std.AssumeFPS(clip=sources[j], src=first)
