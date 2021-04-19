@@ -229,3 +229,12 @@ def multy(img, multy):
             a += 1
     out.sort()
     return (out)
+
+def zone_helper(file,delimiter=' '):
+    import csv
+    zones = ''
+    with open(file) as zonecsv:
+        csvzones = csv.reader(zonecsv, delimiter=delimiter)
+        for row in csvzones:
+            zones += '{},{},b={}/'.format(row[0],row[1],row[2])
+    print(zones)
