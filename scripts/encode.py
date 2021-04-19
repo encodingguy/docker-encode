@@ -66,7 +66,7 @@ if sample_extract:
     extract = awf.SelectRangeEvery(clip=awf.FrameInfo(filtered, 'Filtered') if sample_comparison else filtered, every=3000, length=50,
                                    offset=960)  # Modify it with the length to extract!
     if sample_comparison:
-        comparison = awf.InterleaveDir(folder=test_folder, PrintInfo=True, first=extract, repeat=True)
+        comparison = ptf.InterleaveDir(folder=test_folder, PrintInfo=True, first=extract, repeat=True)
         depth(comparison, 8).set_output()
     else:
         depth(extract, 8).set_output()
