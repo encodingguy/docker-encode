@@ -73,12 +73,13 @@ if sample_extract:
 
 # 4 Source VS Encode
 if encode_comparison:
-    src = awf.FrameInfo(src, 'Source') if not resize else awf.FrameInfo(depth(awf.zresize(filtered, preset=720),8), 'Source')
+    src = awf.FrameInfo(src, 'Source') if not resize else awf.FrameInfo(depth(awf.zresize(clip, preset=720),8), 'Source')
     filtered = awf.FrameInfo(filtered, 'Filtered')
     encode = awf.FrameInfo(encode, 'Encode')
-    comparison_list = [src, encode]
-    if target[0]:
+    comparison_list = [src, filtered, encode]
+    if target:
         target = awf.FrameInfo(target, target_clip_path[1])
         comparison_list.append(target)
     comparison = core.std.Interleave(comparison_list)
+        # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # screenshots function
     comparison.set_output()
