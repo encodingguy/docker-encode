@@ -30,15 +30,16 @@ clip = depth(src, 16)
 # 2.1 Dirty lines & Borders
 fix_borders = False
 if fix_borders:
+    filtered = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[],adj_column=[])
     filtered = awf.FillBorders(clip=clip, top=0, left=0,
                                right=0,bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
-    filtered = awf.CropResize(clip=clip, preset=720) # Resize the cilp and fill borders
 else:
     filtered = clip
 
 # 2.2 Resized
 resize = False
 if resize:
+    resized = awf.CropResize(clip=filtered, preset=720)  # Resize the cilp and fill borders
     resized = awf.zresize(filtered, preset=720)
 else:
     resized = filtered
@@ -50,7 +51,7 @@ if deband:
     filtered = ptf.DebandReader(resized, 'merged-banding-frames.txt', mask=mask)
 else:
     filtered = resized
-    
+
 # 2.4 Out!
 test = False
 if test:
