@@ -23,7 +23,7 @@ nvidia = False #True if you have an nvidia video card
 if nvidia:
     src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.rsplit('.',1)[0]))
     encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.rsplit('.',1)[0])) if encode_comparison else False
-    target = core.lsmas.LWLibavSource('{}.dgi'.format(target_clip_path.rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
+    target = core.lsmas.LWLibavSource('{}.dgi'.format(target_clip_path[0].rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
@@ -39,6 +39,7 @@ if fix_borders:
     filtered = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[],adj_column=[])
     filtered = awf.FillBorders(clip=clip, top=0, left=0,
                                right=0,bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
+    filtered = awf.bbmod(clip,top=0,bottom=0,left=0,right=0,thresh=0,blur=0)
 else:
     filtered = clip
 
