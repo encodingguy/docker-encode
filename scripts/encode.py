@@ -2,7 +2,7 @@ import vapoursynth as vs
 import whalefunc as whf
 import awsmfunc as awf
 import kagefunc as kgf
-from vsutil import depth
+from vsutil import *
 import adptvgrnMod as adp
 import havsfunc as haf
 import pterfunc as ptf
