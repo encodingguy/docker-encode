@@ -17,13 +17,19 @@ test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
 sample_comparison = False  # True if you want to comparison sample clip
 encode_comparison = False  # True if you want to make a source vs encode
+nvidia = False #True if you have an nvidia video card
 
 # 1 Import Source And Crop
-src = core.lsmas.LWLibavSource(source_clip_path).std.Crop(top=0, bottom=0, left=0,
-                                                          right=0)  # Modify it with the pixels to crop!
-encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
-target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison and target_clip_path[0] else False
-clip = depth(src, 16)
+if nvidia:
+    src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.rsplit('.',1)[0]))
+    encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.rsplit('.',1)[0])) if encode_comparison else False
+    target = core.lsmas.LWLibavSource('{}.dgi'.format(target_clip_path.rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
+else:
+    src = core.lsmas.LWLibavSource(source_clip_path)
+    encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
+    target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison and target_clip_path[0] else False
+
+clip = depth(core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0),16)# Modify it with the pixels to crop!
 
 # 2 Filtering
 
