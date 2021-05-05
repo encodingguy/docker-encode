@@ -15,7 +15,7 @@ encode_clip_path = r''  # The path of encode clip
 target_clip_path = [r'','Target']  # First is The path of target clip and the second is the target clip's name
 test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
-sample_comparison = False  # True if you want to comparison sample clip
+sample_comparison = False  # True if you want to compare sample clip
 encode_comparison = False  # True if you want to make a source vs encode
 nvidia = False #True if you have an nvidia video card
 
@@ -29,27 +29,27 @@ else:
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
     target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison and target_clip_path[0] else False
 
-clip = depth(core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0),16)# Modify it with the pixels to crop!
+clip = depth(core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0),16)# Modify it with the even pixels to crop!
 
 # 2 Filtering
 
 # 2.1 Dirty lines & Borders
 fix_borders = False
 if fix_borders:
-    filtered = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[],adj_column=[])
-    filtered = awf.FillBorders(clip=clip, top=0, left=0,
+    fixed = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[],adj_column=[])
+    fixed = awf.FillBorders(clip=clip, top=0, left=0,
                                right=0,bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
-    filtered = awf.bbmod(clip,top=0,bottom=0,left=0,right=0,thresh=0,blur=0)
+    fixed = awf.bbmod(clip,top=0,bottom=0,left=0,right=0,thresh=0,blur=0)
 else:
-    filtered = clip
+    fixed = clip
 
 # 2.2 Resized
 resize = False
 if resize:
-    resized = awf.CropResize(clip=filtered, preset=720)  # Resize the cilp and fill borders
-    resized = awf.zresize(filtered, preset=720)
+    resized = awf.CropResize(clip=fixed, preset=720)  # Resize the cilp and fill borders
+    resized = awf.zresize(fixed, preset=720)
 else:
-    resized = filtered
+    resized = fixed
 
 # 2.3 Deband & Deblock
 deband = False
