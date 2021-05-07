@@ -29,7 +29,8 @@ else:
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
     target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison and target_clip_path[0] else False
 
-clip = depth(core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0),16)# Modify it with the even pixels to crop!
+src = core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0)# Modify it with the even pixels to crop!
+clip = depth(src,16)
 
 # 2 Filtering
 
