@@ -3,8 +3,8 @@
 
 # vstest settings
 
-script = '/scripts/testscript.vpy'
-folder = '~/encoding/tests/'
+script = '/scripts/encode.vpy'
+folder = '/scripts/encoding/tests/'
 
 delimiter1 = '['
 delimiter2 = ']'
