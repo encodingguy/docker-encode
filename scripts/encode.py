@@ -90,5 +90,5 @@ if encode_comparison:
         target = awf.FrameInfo(target, target_clip_path[1])
         comparison_list.append(target)
     comparison = core.std.Interleave(comparison_list)
-        # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # screenshots function
+    # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # screenshots function
     comparison.set_output()
