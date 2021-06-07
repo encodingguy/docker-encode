@@ -238,3 +238,69 @@ def zone_helper(file,delimiter=' '):
         for row in csvzones:
             zones += '{},{},b={}/'.format(row[0],row[1],row[2])
     print(zones)
+
+"""From Ututu (https://gitlab.com/-/snippets/1986062) A tool to fix dirty lines"""
+def fixbrdr(clip, thr=3):
+    import vsutil as vsu
+    y = vsu.plane(clip, 0)
+    diff_expr = "x y - abs"
+    
+    # prepare rows with enough size for convolutions
+    row_1 = y.std.Crop(top=0, bottom=y.height - 1 - 3)
+#   row_1_2 = y.std.Crop(top=0, bottom=y.height - 2)
+    row_2 = y.std.Crop(top=1, bottom=y.height - 2 - 3)
+#   row_2_3 = y.std.Crop(top=1, bottom=y.height - 3)
+#   row_2_3_4 = y.std.Crop(top=2, bottom=y.height - 4)
+    
+    # FillMargins clip
+    fill_mid = row_1.std.Convolution([0, 0, 0, 0, 0, 0, 3, 2, 3])
+    fill_mid = fill_mid.std.CropAbs(width=y.width, height=1)
+    
+    # no idea what convolutions work best but these are the diagonal fills
+    fill_left = row_1.std.Convolution([0, 0, 0, 0, 0, 0, 5, 3, 1])
+    fill_left = fill_left.std.CropAbs(width=y.width, height=1)
+    
+    fill_right = row_1.std.Convolution([0, 0, 0, 0, 0, 0, 1, 3, 5])
+    fill_right = fill_right.std.CropAbs(width=y.width, height=1)
+    
+    # need shifts to see if the row is diagonal or not
+    shift_left = row_2.std.Convolution([0, 0, 0, 1, 0, 0, 0, 0, 0])
+    shift_left = shift_left.std.CropAbs(width=y.width, height=1)
+    shift_right = row_2.std.Convolution([0, 0, 0, 0, 0, 1, 0, 0, 0])
+    shift_right = shift_right.std.CropAbs(width=y.width, height=1)
+    
+    # find threshold by looking at difference of third row minus its blur
+    blur_left = row_2.std.Convolution([0, 0, 0, 1, 0, 0, 0, 0, 0])
+    blur_left = blur_left.std.Convolution([0, 0, 0, 1, 0, 0, 0, 0, 0])
+    blur_left = blur_left.std.Convolution([0, 1, 0, 1, 0, 1, 0, 1, 0])
+    
+    threshold_left = core.std.Expr([blur_left, row_2], diff_expr)
+    threshold_left = threshold_left.std.CropAbs(width=y.width, height=1, top=1)
+    
+    blur_right = row_2.std.Convolution([0, 0, 0, 0, 0, 1, 0, 0, 0])
+    blur_right = blur_right.std.Convolution([0, 0, 0, 0, 0, 1, 0, 0, 0])
+    blur_right = blur_right.std.Convolution([0, 1, 0, 1, 0, 1, 0, 1, 0])
+    
+    threshold_right = core.std.Expr([blur_right, row_2], diff_expr)
+    threshold_right = threshold_right.std.CropAbs(y.width, 1, top=1)
+    
+    # evaluate whether blur results in a pixel being too different from its shift
+    sl_fm_diff = core.std.Expr([shift_left, fill_mid], diff_expr)
+    sr_fm_diff = core.std.Expr([shift_right, fill_mid], diff_expr)
+    #                    x           y           z               a                b          c           d
+    fix = core.std.Expr([sl_fm_diff, sr_fm_diff, threshold_left, threshold_right, fill_right, fill_left, fill_mid], f"x z {thr} * > y a {thr} * < and b y {thr} a * > x z {thr} * < and c d ? ?")
+    
+    s = core.std.StackVertical([fix, y.std.Crop(top=1)])
+    return core.std.ShufflePlanes([s, clip], [0, 1, 2], vs.YUV) if clip.format.color_family == vs.YUV else s
+
+
+def fixbrdrs(clip, left=False, top=False, right=False, bottom=False, thr=3):
+    if right:
+        clip = fixbrdr(clip.std.FlipHorizontal().std.Transpose(), thr).std.FlipHorizontal().std.Transpose()
+    if left:
+        clip = fixbrdr(clip.std.Transpose(), thr).std.Transpose()
+    if top:
+        clip = fixbrdr(clip, thr)
+    if bottom:
+        clip = fixbrdr(clip.std.FlipVertical(), thr).std.FlipVertical()
+    return clip
