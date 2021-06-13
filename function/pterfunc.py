@@ -152,6 +152,9 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
     if first != None:
         sources = first
         j = len(first) - 1
+        j1 = j+1
+        first_list = first
+        first = first[0]
     else:
         sources = []
         j = -1
@@ -187,9 +190,9 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
                 j = j + 1
                 sources.append(0)
                 sources[j] = first
+
             elif first != None and repeat != False:
                 raise TypeError('InterleaveDir: repeat must be a boolean.')
-
     return core.std.Interleave(sources)
 
 
