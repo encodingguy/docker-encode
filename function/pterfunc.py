@@ -8,6 +8,7 @@ from vsutil import depth as Depth
 from rekt import rektlvl, rektlvls, rekt_fast
 import awsmfunc as awf
 import havsfunc as haf
+import vardefunc as vaf
 
 
 def solarcurve(clip, color='24'):
@@ -102,7 +103,7 @@ def solarcurve(clip, color='24'):
 #     return clip
 
 
-def DebandReader(clip, csvfile, range=30, delimiter=' ', mask=None, luma_scaling=15):
+def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling=15):
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. From awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
@@ -121,10 +122,11 @@ def DebandReader(clip, csvfile, range=30, delimiter=' ', mask=None, luma_scaling
             clip_mask = int(row[4])
             strength = row[2].split(',')
             while len(strength) < 3:
-                strength.append(strength[-1])
+                strength.append('0')
             grain_strength = float(row[3])
-            db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
-                                   range=range, output_depth=depth)
+            db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0)
+            # db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
+            #                        range=range, output_depth=depth)
             db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
             filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
             if mask:
@@ -152,7 +154,7 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
     if first != None:
         sources = first
         j = len(first) - 1
-        j1 = j+1
+        j1 = j + 1
 
     else:
         sources = []
@@ -187,8 +189,8 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
 
             if first != None and repeat == True:
                 sources = sources + [0] * j1
-                for i in range(1,j1+1):
-                    sources[j+i] = first[i-1]
+                for i in range(1, j1 + 1):
+                    sources[j + i] = first[i - 1]
                 j = j + j1
             elif first != None and repeat != False:
                 raise TypeError('InterleaveDir: repeat must be a boolean.')
@@ -232,16 +234,20 @@ def multy(img, multy):
     out.sort()
     return (out)
 
-def zone_helper(file,delimiter=' '):
+
+def zone_helper(file, delimiter=' '):
     import csv
     zones = ''
     with open(file) as zonecsv:
         csvzones = csv.reader(zonecsv, delimiter=delimiter)
         for row in csvzones:
-            zones += '{},{},b={}/'.format(row[0],row[1],row[2])
+            zones += '{},{},b={}/'.format(row[0], row[1], row[2])
     print(zones)
 
+
 """From Ututu (https://gitlab.com/-/snippets/1986062) A tool to fix dirty lines"""
+
+
 def fixbrdr(clip, thr=3):
     import vsutil as vsu
     y = vsu.plane(clip, 0)
@@ -249,10 +255,10 @@ def fixbrdr(clip, thr=3):
 
     # prepare rows with enough size for convolutions
     row_1 = y.std.Crop(top=0, bottom=y.height - 1 - 3)
-#   row_1_2 = y.std.Crop(top=0, bottom=y.height - 2)
+    #   row_1_2 = y.std.Crop(top=0, bottom=y.height - 2)
     row_2 = y.std.Crop(top=1, bottom=y.height - 2 - 3)
-#   row_2_3 = y.std.Crop(top=1, bottom=y.height - 3)
-#   row_2_3_4 = y.std.Crop(top=2, bottom=y.height - 4)
+    #   row_2_3 = y.std.Crop(top=1, bottom=y.height - 3)
+    #   row_2_3_4 = y.std.Crop(top=2, bottom=y.height - 4)
 
     # FillMargins clip
     fill_mid = row_1.std.Convolution([0, 0, 0, 0, 0, 0, 3, 2, 3])
@@ -290,7 +296,8 @@ def fixbrdr(clip, thr=3):
     sl_fm_diff = core.std.Expr([shift_left, fill_mid], diff_expr)
     sr_fm_diff = core.std.Expr([shift_right, fill_mid], diff_expr)
     #                    x           y           z               a                b          c           d
-    fix = core.std.Expr([sl_fm_diff, sr_fm_diff, threshold_left, threshold_right, fill_right, fill_left, fill_mid], f"x z {thr} * > y a {thr} * < and b y {thr} a * > x z {thr} * < and c d ? ?")
+    fix = core.std.Expr([sl_fm_diff, sr_fm_diff, threshold_left, threshold_right, fill_right, fill_left, fill_mid],
+                        f"x z {thr} * > y a {thr} * < and b y {thr} a * > x z {thr} * < and c d ? ?")
 
     s = core.std.StackVertical([fix, y.std.Crop(top=1)])
     return core.std.ShufflePlanes([s, clip], [0, 1, 2], vs.YUV) if clip.format.color_family == vs.YUV else s
