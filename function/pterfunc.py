@@ -120,9 +120,9 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
         csvzones = csv.reader(debandcsv, delimiter=delimiter)
         for row in csvzones:
             clip_mask = int(row[4])
-            strength = row[2].split(spliter)
+            strength = [int(i) for i in row[2].split(spliter)]
             while len(strength) < 3:
-                strength.append('0')
+                strength.append(0)
             grain_strength = float(row[3])
             db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0)
             # db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
