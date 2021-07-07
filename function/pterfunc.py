@@ -245,10 +245,8 @@ def zone_helper(file, delimiter=' '):
     print(zones)
 
 
-"""From Ututu (https://gitlab.com/-/snippets/1986062) A tool to fix dirty lines"""
-
-
 def fixbrdr(clip, thr=3):
+    """From Ututu (https://gitlab.com/-/snippets/1986062) A tool to fix dirty lines"""
     import vsutil as vsu
     y = vsu.plane(clip, 0)
     diff_expr = "x y - abs"
