@@ -4,7 +4,7 @@ services:
         image: encodeguy/vapoursynth-linux:v0.1
         container_name: vapoursynth-linux
         volumes:
-            - ./function:/usr/local/lib/python3.9/site-packages
+            - ./function:/python_module
             - ./scripts:/scripts
         ports:
             - 8888:8888

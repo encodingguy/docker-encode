@@ -11,5 +11,7 @@ RUN echo "deb http://www.deb-multimedia.org buster main non-free" >> /etc/apt/so
     && apt-get install -y vapoursynth\
     && apt-get install -y mediainfo\
     && curl https://rclone.org/install.sh | bash\
-    && pip install jupyter\
-    && rm -rf deb-multimedia-keyring_2016.8.1_all.deb repo-mediaarea_1.0-16_all.deb
+    && pip3 install jupyter\
+    && rm -rf deb-multimedia-keyring_2016.8.1_all.deb\
+    && rm -rf repo-mediaarea_1.0-16_all.deb
+ENV PYTHONPATH "${PYTHONPATH}:/python_module"
