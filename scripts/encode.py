@@ -1,5 +1,4 @@
 import vapoursynth as vs
-import whalefunc as whf
 import awsmfunc as awf
 import kagefunc as kgf
 from vsutil import *
