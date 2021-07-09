@@ -25,7 +25,7 @@ docker-compose up -d
 ## How to enter the container
 
 ```
-docker exec -it vapoursynth-yuuno /bin/bash
+docker exec -it vapoursynth-linux /bin/bash
 ```
 
 ## How to encode a movie
