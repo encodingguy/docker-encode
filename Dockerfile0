@@ -1,0 +1,12 @@
+FROM python:3.9.6-buster
+RUN echo "deb http://www.deb-multimedia.org buster main non-free" >> /etc/apt/sources.list\
+    && dpkg --add-architecture i386\
+    && wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb\
+    && dpkg -i deb-multimedia-keyring_2016.8.1_all.deb\
+    && apt-get update\
+    && apt-get update -oAcquire::AllowInsecureRepositories=true\
+    && apt-get install -y deb-multimedia-keyring\
+    && apt-get update\
+    && apt-get install -y vapoursynth\
+    && apt install -y wine32\
+    && curl https://rclone.org/install.sh | bash
