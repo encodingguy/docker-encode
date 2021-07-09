@@ -7,6 +7,7 @@
 - mediainfo: v21.03
 - rclone: v1.55.0
 - x264: x264-r3048-b86ae3c
+- mkvtoolnix: 58.0.0
 
 ## Vapoursynth Plugins
 * [vapoursynth-fillborders](https://github.com/dubhater/vapoursynth-fillborders)
