@@ -1,7 +1,7 @@
 FROM debian:bullseye
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update\
-    && apt-get install -y wget\
+    && apt-get install -y wget curl\
     && echo "deb http://www.deb-multimedia.org bullseye main non-free" >> /etc/apt/sources.list\
     && wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb\
     && dpkg -i deb-multimedia-keyring_2016.8.1_all.deb\
