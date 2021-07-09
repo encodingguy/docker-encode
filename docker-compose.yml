@@ -3,6 +3,9 @@ services:
     vapoursynth-yuuno:
         image: encodeguy/vapoursynth-linux:v0.1
         container_name: vapoursynth-linux
+        environment:
+            - PUID=1000
+            - PGID=1000
         volumes:
             - ./function:/python_module
             - ./scripts:/scripts
