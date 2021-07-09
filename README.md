@@ -60,7 +60,7 @@ docker-compose up -d
 ##### ④.进入容器：
 
 ```
-docker exec -it vapoursynth-yuuno /bin/bash
+docker exec -it vapoursynth-linux /bin/bash
 ```
 
 ##### ⑤.删除容器
