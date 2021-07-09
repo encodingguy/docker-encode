@@ -1,24 +1,21 @@
-# Docker-VapourSynth-Yuuno
+# Docker-VapourSynth-Linux
 
 ## Software Versions
 
 - python3: 3.8.5
-- eac3to: v3.34
-- x265: v3.5
-- mkvmerge: v53.0.0
-- mediainfo: v19.09
-- mktorrent: v1.1
+- dgdemux: v1.0.0.50
+- mediainfo: v21.03
 - rclone: v1.55.0
 - x264: x264-r3048-b86ae3c
 
 ## Vapoursynth Plugins
-
+* [vapoursynth-fillborders](https://github.com/dubhater/vapoursynth-fillborders)
 * [Adaptivegrain-rs v0.3.1](https://git.kageru.moe/kageru/adaptivegrain)
 * [RemapFrames v1.1](https://github.com/Irrational-Encoding-Wizardry/Vapoursynth-RemapFrames)
 
 ## Vapoursynth Python Module
 * [awsmfunc](https://git.concertos.live/AHD/awsmfunc)
-
+* [vardefunc](https://github.com/Ichunjo/vardefunc/)
 ## How to build the environment
 
 ```
@@ -35,31 +32,6 @@ docker exec -it vapoursynth-yuuno /bin/bash
 
 Please refer to [WhaleHu/Encode-guide-frds](https://github.com/WhaleHu/Encode-guide-frds)
 
-## How to use eac3to to demux video tracks, audio tracks, and so on
-
-```
-eac3to-demux /PATH/TO/BDMV
-```
-
-## How to encode TV series
-
-```
-encode_series "/PATH/TO/SERIES/REMUX"
-```
-
-## How to convert dts to ac3
-
-```
-eac3to "xxx.dtsma" "xxx.ac3"
-```
-
-## How to use yuuno
-
-1. Access your_ip:8888, the default password is __123__.
-
-2. Open the notebook __encode.ipynb__
-
-3. to be continued
 
 # Tutorial from Krita
 
@@ -179,26 +151,4 @@ run
 
 
 #### 五.进行成片与原片对比
-
-
-
-### 六.混流封装及制种
-
-#### 1.音轨转换
-
-```
-eac3to "原音轨.dtsma" 新音轨.ac3
-```
-
-#### 2.混流封装
-
-```
-mkvmerge -o "电影名.年份.bluray.1080p.x265.10bit.MNHD-FRDS.mkv" --title "电影名 [年份] Bluray 1080p MNHD-FRDS" --chapters "原盘目录.txt" --compression 0:none --default-duration 0:24000/1001fps --track-name 0:作者署名 成片.hevc --compression 0:none --default-track 0 --language 0:ISO编码 音轨.ac3 --compression 0:none --default-track 0 --language 0:chi --track-name 0:CHS "简中字幕.sup" --compression 0:none --language 0:chi --track-name 0:CHT "繁中字母.sup" --compression 0:none --language 0:原始字幕语言编码 --track-name 0:原始字幕语言编码 "原始语言字幕.sup"
-```
-
-#### 3.制种
-
-```
-mktorrent -a tracker地址 -l 22 -p 成片目录
-```
 
