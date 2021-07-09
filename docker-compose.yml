@@ -1,13 +1,13 @@
 version: "2.1"
 services:
     vapoursynth-yuuno:
-        image: encodeguy/vapoursynth-yuuno:v0.2
+        image: encodeguy/vapoursynth-linux:v0.1
         container_name: vapoursynth-yuuno
         environment:
             - PUID=1000
             - PGID=1000
         volumes:
-            - ./scripts/function:/usr/local/lib/python3.8/site-packages
+            - ./scripts/function:/usr/local/lib/python3.9/site-packages
             - ./scripts:/scripts
         ports:
             - 8888:8888
