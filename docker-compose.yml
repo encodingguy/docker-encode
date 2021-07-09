@@ -4,8 +4,8 @@ services:
         image: encodeguy/vapoursynth-linux:v0.1
         container_name: vapoursynth-linux
         environment:
-            - PUID=1000
-            - PGID=1000
+            - PUID=0
+            - PGID=0
         volumes:
             - ./function:/usr/local/lib/python3.9/site-packages
             - ./scripts:/scripts
