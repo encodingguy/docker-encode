@@ -142,7 +142,7 @@ def InterleaveDir(folder, PrintInfo=False, DelProp=False, first=None, repeat=Fal
       * folder is the folder path
       * PrintInfo = True prints the frame number, picture type and file name on each frame
       * DelProp = True means deleting primaries, matrix and transfer characteristics
-      * first is an optional clip to append in first position of the interleaving list
+      * first is an optional clip list to append in first position of the interleaving list
       * repeat = True means that the appended clip is repeated between each loaded clip from the folder
       * tonemap = True tonemaps each clip before applying FrameInfo
       * solar_curve = True if you want to usr a solar curve fliter to those clips
