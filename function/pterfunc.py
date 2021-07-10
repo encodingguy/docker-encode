@@ -129,7 +129,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
             #                        range=range, output_depth=depth)
             db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
             filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
-            if mask:
+            if mask and clip_mask!=-1:
                 filtered = core.std.MaskedMerge(filtered, clip, mask[clip_mask])
 
     return filtered
