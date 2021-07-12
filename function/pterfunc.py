@@ -238,7 +238,7 @@ def multy(img, multy):
 def zone_helper(file, delimiter=' '):
     import csv
     zones = ''
-    with open(file) as zonecsv:
+    with open(file,encoding='utf-8') as zonecsv:
         csvzones = csv.reader(zonecsv, delimiter=delimiter)
         for row in csvzones:
             zones += '{},{},b={}/'.format(row[0], row[1], row[2])
