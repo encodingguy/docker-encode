@@ -23,7 +23,7 @@ nvidia = False #True if you have an nvidia video card
 if nvidia:
     src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.rsplit('.',1)[0]))
     encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.rsplit('.',1)[0])) if encode_comparison else False
-    target = core.lsmas.LWLibavSource('{}.dgi'.format(target_clip_path[0].rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
+    target = core.dgdecodenv.DGSource('{}.dgi'.format(target_clip_path[0].rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
