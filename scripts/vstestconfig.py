@@ -4,7 +4,7 @@
 # vstest settings
 
 script = '/scripts/encode.vpy'
-folder = '/scripts/encoding/tests/'
+folder = '/encode/tests/'
 
 delimiter1 = '['
 delimiter2 = ']'

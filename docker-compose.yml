@@ -9,6 +9,7 @@ services:
         volumes:
             - ./function:/python_module
             - ./scripts:/scripts
+            - /root/source:/encode
         ports:
             - 8888:8888
         restart: unless-stopped
