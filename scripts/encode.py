@@ -12,22 +12,28 @@ core = vs.core
 # 0 Encode Flag
 source_clip_path = r''  # The path of source clip
 encode_clip_path = r''  # The path of encode clip
-target_clip_path = [r'','Target']  # First is The path of target clip and the second is the target clip's name
+target_clip_path = [r'', 'Target']  # First is The path of target clip and the second is the target clip's name
+target_clips_path = {}  # For multiple clips,keys is the encode group and value is the path {"Handjob":r"/root/H.mkv"}
 test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
 sample_comparison = False  # True if you want to compare sample clip
 encode_comparison = False  # True if you want to make a source vs encode
-nvidia = False #True if you have an nvidia video card
+nvidia = False  # True if you have an nvidia video card
+
+
+# 0 Init
+if target_clip_path[0]:
+    target_clips_path[target_clip_path[0]] = target_clip_path[1]
 
 # 1 Import Source And Crop
 if nvidia:
-    src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.rsplit('.',1)[0]))
-    encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.rsplit('.',1)[0])) if encode_comparison else False
-    target = core.dgdecodenv.DGSource('{}.dgi'.format(target_clip_path[0].rsplit('.',1)[0])) if encode_comparison and target_clip_path[0] else False
+    src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.removesuffix('.dgi')))
+    encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.removesuffix('.dgi'))) if encode_comparison else False
+    target = [[i, core.dgdecodenv.DGSource('{}.dgi'.format(target_clips_path[i].removesuffix('.dgi')))] for i in target_clips_path.keys()] if encode_comparison and target_clips_path else False
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
-    target = core.lsmas.LWLibavSource(target_clip_path[0]) if encode_comparison and target_clip_path[0] else False
+    target = [[i, core.lsmas.LWLibavSource(target_clips_path[i])] for i in target_clips_path.keys()] if encode_comparison and target_clips_path else False
 
 src = core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0)# Modify it with the even pixels to crop!
 clip = depth(src,16)
@@ -86,8 +92,8 @@ if encode_comparison:
     encode = awf.FrameInfo(encode, 'Encode')
     comparison_list = [src, filtered, encode]
     if target:
-        target = awf.FrameInfo(target, target_clip_path[1])
-        comparison_list.append(target)
+        target = [awf.FrameInfo(i[1], i[0]) for i in target]
+        comparison_list.extend(target)
     comparison = core.std.Interleave(comparison_list)
-    # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # screenshots function
+    # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # take screenshots
     comparison.set_output()
