@@ -322,7 +322,7 @@ def banding_extract(clip, csv_file, delimiter=' '):
     import csv
     with open(csv_file) as banding_csv:
         csv_zones = csv.reader(banding_csv, delimiter=delimiter)
-        output = None
+        output = clip[0:1]
         for row in csv_zones:
             start = int(row[0])
             end = int(row[1])
