@@ -322,14 +322,14 @@ def banding_extract(clip, csv_file, delimiter=' '):
     import csv
     with open(csv_file) as banding_csv:
         csv_zones = csv.reader(banding_csv, delimiter=delimiter)
-    output = None
-    for row in csv_zones:
-        start = int(row[0])
-        end = int(row[1])
-        if end - start < 20:
-            output += clip[start:end]
-        elif end - start < 300:
-            output += clip[start:start + 30]
-        else:
-            output = awf.SelectRangeEvery(clip,every=200,length=10)
+        output = None
+        for row in csv_zones:
+            start = int(row[0])
+            end = int(row[1])
+            if end - start < 20:
+                output += clip[start:end]
+            elif end - start < 300:
+                output += clip[start:start + 30]
+            else:
+                output = awf.SelectRangeEvery(clip, every=200, length=10)
     return output
