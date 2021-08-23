@@ -331,5 +331,5 @@ def banding_extract(clip, csv_file, delimiter=' '):
             elif end - start < 300:
                 output += clip[start:start + 30]
             else:
-                output = awf.SelectRangeEvery(clip, every=200, length=10)
+                output = awf.SelectRangeEvery(clip[start:end], every=200, length=10)
     return output
