@@ -129,7 +129,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
             #                        range=range, output_depth=depth)
             db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
             filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
-            if mask and clip_mask!=-1:
+            if mask and clip_mask != -1:
                 filtered = core.std.MaskedMerge(filtered, clip, mask[clip_mask])
 
     return filtered
@@ -238,7 +238,7 @@ def multy(img, multy):
 def zone_helper(file, delimiter=' '):
     import csv
     zones = ''
-    with open(file,encoding='utf-8') as zonecsv:
+    with open(file, encoding='utf-8') as zonecsv:
         csvzones = csv.reader(zonecsv, delimiter=delimiter)
         for row in csvzones:
             zones += '{},{},b={}/'.format(row[0], row[1], row[2])
@@ -311,3 +311,23 @@ def fixbrdrs(clip, left=False, top=False, right=False, bottom=False, thr=3):
     if bottom:
         clip = fixbrdr(clip.std.FlipVertical(), thr).std.FlipVertical()
     return clip
+
+
+def banding_extract(clip, csv_file, delimiter=' '):
+    """Read banding from a csv file and return a extract one, useful for test
+    > Usage:
+        *clip is the clip you want to extract
+        *csv_file is the file contains the banding frame: <startframe> <endframe>
+        *delimiter is the marks to cut the csv file"""
+    import csv
+    with open(csv_file) as banding_csv:
+        csv_zones = csv.reader(banding_csv, delimiter=delimiter)
+    output = None
+    for row in csv_zones:
+        start = int(row[0])
+        end = int(row[1])
+        if end - start < 20:
+            output += clip[start:end]
+        else:
+            output += clip[start:start + 30]
+    return output
