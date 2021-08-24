@@ -107,7 +107,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. Original from awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
-      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>,**<strength_b>,**<strength_r>> <grain strength> <mask>
+      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>,**<strength_b>,**<strength_r>> <grain strength> <mask> <grain before mask>
       * mask is the mask list you want to apply. it should be in a list
       * range is passed as range in the f3kdb filter
     """
@@ -120,6 +120,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
         csvzones = csv.reader(debandcsv, delimiter=delimiter)
         for row in csvzones:
             clip_mask = int(row[4])
+            before = True if int(row[5]) == 1 else False
             strength = [int(i) for i in row[2].split(spliter)]
             while len(strength) < 3:
                 strength.append(0)
@@ -127,10 +128,15 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
             db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0)
             # db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
             #                        range=range, output_depth=depth)
-            db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
-            filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
+            if before:
+                db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
             if mask and clip_mask != -1:
-                filtered = core.std.MaskedMerge(filtered, clip, mask[clip_mask])
+                db = core.std.MaskedMerge(db, clip, mask[clip_mask])
+            if not before:
+                db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength)
+            filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
+
+
 
     return filtered
 
