@@ -235,13 +235,13 @@ def multy(img, multy):
     return (out)
 
 
-def zone_helper(file, delimiter=' '):
+def zone_helper(file, delimiter=' ',type='crf'):
     import csv
     zones = ''
     with open(file, encoding='utf-8') as zonecsv:
         csvzones = csv.reader(zonecsv, delimiter=delimiter)
         for row in csvzones:
-            zones += '{},{},b={}/'.format(row[0], row[1], row[2])
+            zones += '{},{},{}={}/'.format(row[0], row[1], type,row[2])
     print(zones)
 
 
