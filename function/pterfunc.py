@@ -115,7 +115,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
 
     filtered = clip if get_depth(clip) <= 16 else Depth(clip, 16)
     depth = get_depth(clip)
-    spliter = '、' if delimiter == ' ' else ' '
+    spliter = '`' if delimiter == ' ' else ' '
     with open(csvfile) as debandcsv:
         csvzones = csv.reader(debandcsv, delimiter=delimiter)
         for row in csvzones:
