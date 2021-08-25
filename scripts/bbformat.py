@@ -1,10 +1,8 @@
 import re
 
 
-def format_bbcode(row):
+def format_bbcode(row, peers):
     target = '[/url]'
-
-    peers = int(input('请输入参与对比个数：'))
 
     results = row.split(target)
     output = ''
@@ -20,19 +18,29 @@ def format_bbcode(row):
         out.write(output[:-6])
 
 
-def remove_url(raw):
+def remove_url(raw, peers):
     result = re.findall(r'(?<=])https?://.+?\.png', raw)
     if not result:
         result = re.findall(r'(?<=src=")https?://.+?\.png', raw)
-    result = ["[img]{}[/img]\n".format(i) for i in result]
+    counter = 0
+    output = ''
+    for i in result:
+        counter += 1
+        i = "[img]{}[/img]\n".format(i.strip())
+
+        if counter == peers:
+            i += '\n'
+            counter = 0
+        output += i
     with open('output.txt', 'w') as out:
-        out.writelines(result)
+        out.write(output)
 
 
 if __name__ == "__main__":
     a = input('请输入需要处理的数据：')
-    option = input('请输入需要使用的模式：\n1. 格式化换行bbcode\n2.删除图片模式中的无关内容\n')
+    b = int(input('请输入参与对比个数：'))
+    option = input('请输入需要使用的模式：\n1.格式化换行bbcode\n2.删除图片模式中的无关内容\n')
     if option == '1':
-        format_bbcode(a)
+        format_bbcode(a, b)
     else:
-        remove_url(a)
+        remove_url(a, b)
