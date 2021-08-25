@@ -12,7 +12,7 @@ core = vs.core
 # 0 Encode Flag
 source_clip_path = r''  # The path of source clip
 encode_clip_path = r''  # The path of encode clip
-target_clip_path = [r'', 'Target']  # First is The path of target clip and the second is the target clip's name
+target_clip_path = [r'Target', '']  # First is The path of target clip and the second is the target clip's name
 target_clips_path = {}  # For multiple clips,keys is the encode group and value is the path {"Handjob":r"/root/H.mkv"}
 test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
