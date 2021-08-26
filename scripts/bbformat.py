@@ -39,7 +39,7 @@ def remove_url(raw, peers):
 if __name__ == "__main__":
     a = input('请输入需要处理的数据：')
     b = int(input('请输入参与对比个数：'))
-    option = input('请输入需要使用的模式：\n1.格式化换行bbcode\n2.删除图片模式中的无关内容\n')
+    option = input('请输入需要使用的模式：\n1.格式化换行略缩图bbcode\n2.删除图片模式中的无关内容并(或)格式化原图\n')
     if option == '1':
         format_bbcode(a, b)
     else:
