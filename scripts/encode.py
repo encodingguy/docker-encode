@@ -20,7 +20,6 @@ sample_comparison = False  # True if you want to compare sample clip
 encode_comparison = False  # True if you want to make a source vs encode
 nvidia = False  # True if you have an nvidia video card
 
-
 # 0 Init
 if target_clip_path[0]:
     target_clips_path[target_clip_path[0]] = target_clip_path[1]
@@ -28,25 +27,29 @@ if target_clip_path[0]:
 # 1 Import Source And Crop
 if nvidia:
     src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.removesuffix('.dgi')))
-    encode = core.dgdecodenv.DGSource('{}.dgi'.format(encode_clip_path.removesuffix('.dgi'))) if encode_comparison else False
-    target = [[i, core.dgdecodenv.DGSource('{}.dgi'.format(target_clips_path[i].removesuffix('.dgi')))] for i in target_clips_path.keys()] if encode_comparison and target_clips_path else False
+    encode = core.dgdecodenv.DGSource(
+        '{}.dgi'.format(encode_clip_path.removesuffix('.dgi'))) if encode_comparison else False
+    target = [[i, core.dgdecodenv.DGSource('{}.dgi'.format(target_clips_path[i].removesuffix('.dgi')))] for i in
+              target_clips_path.keys()] if encode_comparison and target_clips_path else False
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
     encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
-    target = [[i, core.lsmas.LWLibavSource(target_clips_path[i])] for i in target_clips_path.keys()] if encode_comparison and target_clips_path else False
+    target = [[i, core.lsmas.LWLibavSource(target_clips_path[i])] for i in
+              target_clips_path.keys()] if encode_comparison and target_clips_path else False
 
-src = core.std.Crop(clip=src,top=0,bottom=0,left=0,right=0)# Modify it with the even pixels to crop!
-clip = depth(src,16)
+src = core.std.Crop(clip=src, top=0, bottom=0, left=0, right=0)  # Modify it with the even pixels to crop!
+clip = depth(src, 16)
 
 # 2 Filtering
 
 # 2.1 Dirty lines & Borders
 fix_borders = False
 if fix_borders:
-    fixed = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[],adj_column=[])
+    fixed = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[], adj_column=[])
     fixed = awf.FillBorders(clip=clip, top=0, left=0,
-                               right=0,bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
-    fixed = awf.bbmod(clip,top=0,bottom=0,left=0,right=0,thresh=0,blur=0)
+                            right=0,
+                            bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
+    fixed = awf.bbmod(clip, top=0, bottom=0, left=0, right=0, thresh=0, blur=0)
 else:
     fixed = clip
 
@@ -75,6 +78,11 @@ if test:
     gama.set_output()
     filtered.set_output(index=1)
 
+    # Upscale check
+    downscale = awf.zresize(filtered, preset=720)
+    rescale = awf.zresize(downscale, preset=1080)
+    rescale = awf.FrameInfo(rescale, 'upscale')
+    com = core.std.Interleave([rescale, filtered])
 
 else:
     filtered = depth(filtered, 8)
@@ -83,8 +91,9 @@ else:
 
 # 3 Sample Extract & Comparison
 if sample_extract:
-    filtered = awf.FrameInfo(filtered, 'Filtered') if sample_comparison else filtered # Tag original frameinfo if compare sample
-    extract = awf.SelectRangeEvery(filtered, every=3000, length=50,offset=960)  # Modify it with the length to extract!
+    filtered = awf.FrameInfo(filtered,
+                             'Filtered') if sample_comparison else filtered  # Tag original frameinfo if compare sample
+    extract = awf.SelectRangeEvery(filtered, every=3000, length=50, offset=960)  # Modify it with the length to extract!
     if sample_comparison:
         comparison = ptf.InterleaveDir(folder=test_folder, PrintInfo=True, first=[extract], repeat=True)
         depth(comparison, 8).set_output()
@@ -93,7 +102,8 @@ if sample_extract:
 
 # 4 Source VS Encode
 if encode_comparison:
-    src = awf.FrameInfo(src, 'Source') if not resize else awf.FrameInfo(depth(awf.zresize(clip, preset=720),8), 'Source')
+    src = awf.FrameInfo(src, 'Source') if not resize else awf.FrameInfo(depth(awf.zresize(clip, preset=720), 8),
+                                                                        'Source')
     filtered = awf.FrameInfo(filtered, 'Filtered')
     encode = awf.FrameInfo(encode, 'Encode')
     comparison_list = [src, filtered, encode]
