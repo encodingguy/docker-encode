@@ -70,6 +70,12 @@ else:
 test = False
 if test:
     '''Any test here'''
+    # Gama test area
+    gama = awf.autogma(filtered)
+    gama.set_output()
+    filtered.set_output(index=1)
+
+
 else:
     filtered = depth(filtered, 8)
     if sample_extract is False and encode_comparison is False:
