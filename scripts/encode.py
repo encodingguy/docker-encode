@@ -83,7 +83,7 @@ if test:
     rescale = awf.zresize(downscale, preset=1080)
     rescale = awf.FrameInfo(rescale, 'upscale')
     com = core.std.Interleave([rescale, filtered])
-
+    com.set_output()
 else:
     filtered = depth(filtered, 8)
     if sample_extract is False and encode_comparison is False:
