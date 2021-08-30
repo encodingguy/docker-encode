@@ -107,7 +107,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. Original from awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
-      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>,**<strength_b>,**<strength_r>> <grain strength>,**<grain strength_c> <mask> <grain before mask>
+      * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>`**<strength_b>`**<strength_r>> <grain strength>`**<grain strength_c> <mask> <grain before mask>
       * mask is the mask list you want to apply. it should be in a list
       * range is passed as range in the f3kdb filter
     """
