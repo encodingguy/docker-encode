@@ -110,6 +110,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
       * csvfile is the path to a csv file containing in each row: <startframe> <endframe> <<strength_y>`**<strength_b>`**<strength_r>> <grain strength>`**<grain strength_c> <mask> <grain before mask>
       * mask is the mask list you want to apply. it should be in a list
       * range is passed as range in the f3kdb filter
+      * tv_range is a bool value if keep tv range
     """
     import csv
 
