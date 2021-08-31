@@ -103,7 +103,7 @@ def solarcurve(clip, color='24'):
 #     return clip
 
 
-def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling=15):
+def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling=15,tv_range=True):
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. Original from awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
@@ -127,7 +127,7 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
             grain_strength = [float(i) for i in row[3].split(spliter)]
             if len(grain_strength) < 2:
                 grain_strength.append(0)
-            db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0)
+            db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0,output_depth=depth,keep_tv_range=tv_range)
             # db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
             #                        range=range, output_depth=depth)
             if before:
