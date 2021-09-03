@@ -20,9 +20,9 @@ def format_bbcode(row, peers):
 
 
 def remove_url(raw, peers):
-    result = re.findall(r'(?<=])https?://.+?\.png', raw)
+    result = re.findall(r'(?<=])https?://.+?\.(?:png|jpe?g|webbp)', raw)
     if not result:
-        result = re.findall(r'(?<=src=")https?://.+?\.png', raw)
+        result = re.findall(r'(?<=src=")https?://.+?\.(?:png|jpe?g|webbp)', raw)
     counter = 0
     output = ''
     for i in result:
