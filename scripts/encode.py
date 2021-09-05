@@ -18,24 +18,28 @@ test_folder = r''  # The path of the test encodes
 sample_extract = False  # True if you want to extract sample clip
 sample_comparison = False  # True if you want to compare sample clip
 encode_comparison = False  # True if you want to make a source vs encode
-nvidia = False  # True if you have an nvidia video card
 
 # 0 Init
-if target_clip_path[0]:
+if target_clip_path[1]:
     target_clips_path[target_clip_path[0]] = target_clip_path[1]
 
 # 1 Import Source And Crop
-if nvidia:
-    src = core.dgdecodenv.DGSource('{}.dgi'.format(source_clip_path.removesuffix('.dgi')))
-    encode = core.dgdecodenv.DGSource(
-        '{}.dgi'.format(encode_clip_path.removesuffix('.dgi'))) if encode_comparison else False
-    target = [[i, core.dgdecodenv.DGSource('{}.dgi'.format(target_clips_path[i].removesuffix('.dgi')))] for i in
-              target_clips_path.keys()] if encode_comparison and target_clips_path else False
+if source_clip_path.endswith('.dgi'):
+    src = core.dgdecodenv.DGSource(source_clip_path)
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
-    encode = core.lsmas.LWLibavSource(encode_clip_path) if encode_comparison else False
-    target = [[i, core.lsmas.LWLibavSource(target_clips_path[i])] for i in
-              target_clips_path.keys()] if encode_comparison and target_clips_path else False
+if encode_comparison:
+    if encode_clip_path.endswith('.dgi'):
+        encode = core.dgdecodenv.DGSource(encode_clip_path)
+    else:
+        encode = core.lsmas.LWLibavSource(encode_clip_path)
+else:
+    encode = False
+if encode_comparison and target_clips_path:
+    target = [[i, core.dgdecodenv.DGSource(target_clips_path[i]) if target_clips_path[i].endswith('.dgi') else core.lsmas.LWLibavSource(target_clips_path[i])] for i in
+              target_clips_path.keys()]
+else:
+    target = False
 
 src = core.std.Crop(clip=src, top=0, bottom=0, left=0, right=0)  # Modify it with the even pixels to crop!
 clip = depth(src, 16)
