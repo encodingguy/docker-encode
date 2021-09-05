@@ -103,7 +103,7 @@ def solarcurve(clip, color='24'):
 #     return clip
 
 
-def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling=15,tv_range=True):
+def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling=15, tv_range=True):
     """
     DebandReader, read a csv file to apply a f3kdb filter for given strengths and frames. Original from awsmfunc.
     > Usage: DebandReader(clip, csvfile, grain, range)
@@ -128,20 +128,21 @@ def DebandReader(clip, csvfile, range=16, delimiter=' ', mask=None, luma_scaling
             grain_strength = [float(i) for i in row[3].split(spliter)]
             if len(grain_strength) < 2:
                 grain_strength.append(0)
-            db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0,output_depth=depth,keep_tv_range=tv_range)
+            db = vaf.deband.dumb3kdb(clip, radius=range, threshold=strength, grain=0, output_depth=depth,
+                                     keep_tv_range=tv_range)
             # db = core.f3kdb.Deband(clip, y=strength[0], cb=strength[1], cr=strength[2], grainy=0, grainc=0,
             #                        range=range, output_depth=depth)
             if before:
                 db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength[0],
-                                     cstrength=grain_strength[1], grain_chroma=True if grain_strength[1] != 0 else False)
+                                     cstrength=grain_strength[1],
+                                     grain_chroma=True if grain_strength[1] != 0 else False)
             if mask and clip_mask != -1:
                 db = core.std.MaskedMerge(db, clip, mask[clip_mask])
             if not before:
                 db = agm.adptvgrnMod(db, luma_scaling=luma_scaling, strength=grain_strength[0],
-                                     cstrength=grain_strength[1], grain_chroma=True if grain_strength[1] != 0 else False)
+                                     cstrength=grain_strength[1],
+                                     grain_chroma=True if grain_strength[1] != 0 else False)
             filtered = awf.ReplaceFrames(filtered, db, mappings="[" + row[0] + " " + row[1] + "]")
-
-
 
     return filtered
 
@@ -246,13 +247,13 @@ def multy(img, multy):
     return (out)
 
 
-def zone_helper(file, delimiter=' ',type='crf'):
+def zone_helper(file, delimiter=' ', type='crf'):
     import csv
     zones = ''
     with open(file, encoding='utf-8') as zonecsv:
         csvzones = csv.reader(zonecsv, delimiter=delimiter)
         for row in csvzones:
-            zones += '{},{},{}={}/'.format(row[0], row[1], type,row[2])
+            zones += '{},{},{}={}/'.format(row[0], row[1], type, row[2])
     print(zones)
 
 
@@ -344,3 +345,25 @@ def banding_extract(clip, csv_file, delimiter=' '):
             else:
                 output += awf.SelectRangeEvery(clip[start:end], every=200, length=10)
     return output
+
+
+def zone_detect(csv_file, delimiter=' '):
+    """"detect your frame if zoned and print a human readable outu
+    > Usage:
+        *csv_file is the file contains the banding frame: <startframe> <endframe>
+        *delimiter is the marks to cut the csv file"""
+    import csv
+    zones = []
+    no_zone = []
+    frames = input("请输入需要截取的图片帧数，以空格为分割：").split(' ')
+    frames = [int(frame) for frame in frames]
+    with open(csv_file) as frame_csv:
+        csv_zones = csv.reader(frame_csv, delimiter=delimiter)
+        for frame in frames:
+            for row in csv_zones:
+                if frame in range(int(row[0]), int(row[1])):
+                    zones.append(frame)
+                    break
+            no_zone.append(frame)
+    print('zones: {}'.format(zones))
+    print('no zone: {}'.format(no_zone))
