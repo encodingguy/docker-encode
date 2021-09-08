@@ -28,6 +28,7 @@ if source_clip_path.endswith('.dgi'):
     src = core.dgdecodenv.DGSource(source_clip_path)
 else:
     src = core.lsmas.LWLibavSource(source_clip_path)
+
 if encode_comparison:
     if encode_clip_path.endswith('.dgi'):
         encode = core.dgdecodenv.DGSource(encode_clip_path)
@@ -35,6 +36,7 @@ if encode_comparison:
         encode = core.lsmas.LWLibavSource(encode_clip_path)
 else:
     encode = False
+
 if encode_comparison and target_clips_path:
     target = [[i, core.dgdecodenv.DGSource(target_clips_path[i]) if target_clips_path[i].endswith('.dgi') else core.lsmas.LWLibavSource(target_clips_path[i])] for i in
               target_clips_path.keys()]
