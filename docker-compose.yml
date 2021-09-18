@@ -2,7 +2,7 @@ version: "2.1"
 services:
     vapoursynth-yuuno:
         image: encodeguy/vapoursynth-linux:v0.1
-        container_name: vapoursynth-linux
+        container_name: encode
         environment:
             - PUID=1000
             - PGID=1000
