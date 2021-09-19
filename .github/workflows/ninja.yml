@@ -1,0 +1,61 @@
+#构建 Vapoursynth 编译环境
+name: Build Vapoursynth Plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Python #安装python
+      run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update
+        sudo apt install python3.9 python3-pip
+    - name: Install decencies #安装依赖
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget curl
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y autoconf cargo git libfftw3-dev libtool nasm
+        sudo apt-get clean
+        sudo apt-get autoremove
+        pip3 install meson ninja cython
+    - name: Check zimg #安装zimg
+      uses: actions/checkout@v2
+      with:
+        repository: sekrit-twc/zimg #需要构建的插件的仓库
+        ref: v3.0
+    - name: Install zimg # 安装zimg
+      run: |
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
+    - name: Checkout Vapoursynth
+      uses: actions/checkout@v2
+      with:
+        repository: vapoursynth/vapoursynth
+
+    - name: Compile VS
+      run: |
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
+    - name: Checkout Plugin
+      uses: actions/checkout@v2
+      with:
+        repository: dubhater/vapoursynth-mvtools #需要构建的插件的仓库
+    - name: Compile  #开始构建
+      run: |
+        mkdir build && cd build
+        meson ../
+        ninja
+    - name: Upload File #上传构建成果
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: Compiled
+        path: build/*.so
