@@ -7,16 +7,13 @@ RUN apt-get update\
     && dpkg -i deb-multimedia-keyring_2016.8.1_all.deb\
     && wget https://mediaarea.net/repo/deb/repo-mediaarea_1.0-16_all.deb\
     && dpkg -i repo-mediaarea_1.0-16_all.deb\
-    && apt-get update\
-    && apt-get update -oAcquire::AllowInsecureRepositories=true\
-    && apt-get install -y deb-multimedia-keyring\
+    && rm -rf deb-multimedia-keyring_2016.8.1_all.deb\
+    && rm -rf repo-mediaarea_1.0-16_all.deb\
     && apt-get update\
     && apt-get install -y python python3 python3-pip git unzip vim mkvtoolnix\
     && apt-get install -y vapoursynth\
     && apt-get install -y mediainfo\
     && pip3 install jupyter\
-    && rm -rf deb-multimedia-keyring_2016.8.1_all.deb\
-    && rm -rf repo-mediaarea_1.0-16_all.deb\
     && apt-get clean\
     && apt-get autoremove \
     && pip3 install git+https://git.concertos.live/AHD/awsmfunc.git\
