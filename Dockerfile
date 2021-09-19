@@ -11,7 +11,7 @@ RUN apt-get update\
     && rm -rf repo-mediaarea_1.0-16_all.deb\
     && apt-get update\
     && apt-get install -y python python3 python3-pip git unzip vim mkvtoolnix\
-    && apt-get install -y vapoursynth\
+    && apt-get install -y vapoursynth libfftw3-dev\
     && apt-get install -y mediainfo\
     && pip3 install jupyter\
     && apt-get clean\
