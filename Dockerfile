@@ -14,7 +14,6 @@ RUN apt-get update\
     && apt-get install -y python python3 python3-pip git unzip vim mkvtoolnix\
     && apt-get install -y vapoursynth\
     && apt-get install -y mediainfo\
-    && curl https://rclone.org/install.sh | bash\
     && pip3 install jupyter\
     && rm -rf deb-multimedia-keyring_2016.8.1_all.deb\
     && rm -rf repo-mediaarea_1.0-16_all.deb\
