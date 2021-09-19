@@ -1,0 +1,44 @@
+#构建 Vapoursynth 编译环境
+name: Build Vapoursynth Plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    env:
+      Repo: ${{ secrets.Repo }} #读取需要构建的仓库，格式：Repository name with owner. For example, actions/checkout
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        repository: $Repo #需要构建的插件的仓库
+    - name: Set up Python #安装python
+      uses: actions/setup-python@v2.2.1
+      with:
+        python-version: 3.9
+    - name: Install decencies #安装依赖
+      run: |
+        apt-get update
+        apt-get install -y wget curl
+        echo "deb http://www.deb-multimedia.org bullseye main non-free" >> /etc/apt/sources.list
+        wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb
+        dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
+        apt-get update
+        apt-get upgrade -y
+        apt-get install -y autoconf cargo git libfftw3-dev libtool vapoursynth-dev nasm
+        apt-get clean
+        apt-get autoremove
+        pip install meson ninja
+    - name: Compile  #开始构建
+      run: |
+        mkdir build && cd build
+        meson ../
+        ninja
+    - name: Upload File #上传构建成果
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: Compiled
+        path: ./*
+
