@@ -38,7 +38,8 @@ else:
     encode = False
 
 if encode_comparison and target_clips_path:
-    target = [[i, core.dgdecodenv.DGSource(target_clips_path[i]) if target_clips_path[i].endswith('.dgi') else core.lsmas.LWLibavSource(target_clips_path[i])] for i in
+    target = [[i, core.dgdecodenv.DGSource(target_clips_path[i]) if target_clips_path[i].endswith(
+        '.dgi') else core.lsmas.LWLibavSource(target_clips_path[i])] for i in
               target_clips_path.keys()]
 else:
     target = False
@@ -99,7 +100,8 @@ else:
 if sample_extract:
     filtered = awf.FrameInfo(filtered,
                              'Filtered') if sample_comparison else filtered  # Tag original frameinfo if compare sample
-    extract = awf.SelectRangeEvery(filtered, every=3000, length=50, offset=960) + ptf.banding_extract(filtered, 'csvfile')  # Modify it with the length to extract!
+    extract = awf.SelectRangeEvery(filtered, every=3000, length=50, offset=960) + ptf.banding_extract(filtered,
+                                                                                                      'csvfile')  # Modify it with the length to extract!
     if sample_comparison:
         comparison = ptf.InterleaveDir(folder=test_folder, PrintInfo=True, first=[extract], repeat=True)
         depth(comparison, 8).set_output()
@@ -117,5 +119,17 @@ if encode_comparison:
         target = [awf.FrameInfo(i[1], i[0]) for i in target]
         comparison_list.extend(target)
     comparison = core.std.Interleave(comparison_list)
-    # awf.ScreenGen(comparison, r'comparsion\The.Peanut.Butter.Falcon.2019', 'a',ptf.multy([3412,92539],4)) # take screenshots
     comparison.set_output()
+
+
+# Helper
+screenshots = False
+folder = ''
+if screenshots:
+    screenshots = {"dirty lines": [],
+                   'banding': [],
+                   'screen': []}
+
+    for k in screenshots:
+        if screenshots[k]:
+            awf.ScreenGen(comparison, os.path.join(folder, k), 'a', ptf.multy(screenshots[k], 4))  # take screenshots
