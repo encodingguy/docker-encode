@@ -123,9 +123,8 @@ if encode_comparison:
 
 
 # Helper
-screenshots = False
 folder = ''
-if screenshots:
+if folder:
     screenshots = {"dirty lines": [],
                    'banding': [],
                    'screen': []}
