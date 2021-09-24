@@ -6,6 +6,7 @@ import adptvgrnMod as adp
 import havsfunc as haf
 import pterfunc as ptf
 import vardefunc as vaf
+import os
 
 core = vs.core
 
