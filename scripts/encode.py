@@ -6,7 +6,7 @@ import adptvgrnMod as adp
 import havsfunc as haf
 import pterfunc as ptf
 import vardefunc as vaf
-
+import os
 core = vs.core
 
 # 0 Encode Flag
@@ -131,4 +131,4 @@ if folder:
 
     for k in screenshots:
         if screenshots[k]:
-            awf.ScreenGen(comparison, os.path.join(folder, k), 'a', ptf.multy(screenshots[k], 4))  # take screenshots
+            awf.ScreenGen(comparison, os.path.join(folder,os.path.basename(__file__), k), 'a', ptf.multy(screenshots[k], 4))  # take screenshots
