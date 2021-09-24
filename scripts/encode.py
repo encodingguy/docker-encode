@@ -126,10 +126,12 @@ if encode_comparison:
 # Helper
 folder = ''
 if folder:
+    screen_path = os.path.join(os.path.dirname(__file__), folder, os.path.basename(__file__))
+    os.makedirs(screen_path)
     screenshots = {"dirty lines": [],
                    'banding': [],
                    'screen': []}
 
     for k in screenshots:
         if screenshots[k]:
-            awf.ScreenGen(comparison, os.path.join(folder, k), 'a', ptf.multy(screenshots[k], 4))  # take screenshots
+            awf.ScreenGen(comparison, os.path.join(screen_path, k), 'a', ptf.multy(screenshots[k], 4))  # take screenshots
