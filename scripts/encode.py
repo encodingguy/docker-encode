@@ -127,7 +127,8 @@ if encode_comparison:
 folder = ''
 if folder:
     screen_path = os.path.join(os.path.dirname(__file__), folder, os.path.basename(__file__))
-    os.makedirs(screen_path)
+    if not os.path.exists(screen_path):
+        os.makedirs(screen_path)
     screenshots = {"dirty lines": [],
                    'banding': [],
                    'screen': []}
