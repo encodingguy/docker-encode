@@ -49,8 +49,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: ${{ secrets.repo }} #需要构建的插件的仓库
-      env:
-        REPO: ${{ secrets.repo }}
     - name: Compile  #开始构建
       run: |
         mkdir build && cd build
