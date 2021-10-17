@@ -19,7 +19,7 @@ jobs:
         sudo apt-get install -y wget curl
         sudo apt-get update
         sudo apt-get upgrade -y
-        sudo apt-get install -y autoconf cargo git libfftw3-dev libtool nasm
+        sudo apt-get install -y autoconf cargo git libfftw3-dev libtool nasm libplacebo-dev
         sudo apt-get clean
         sudo apt-get autoremove
         pip3 install meson ninja cython
