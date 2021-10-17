@@ -26,7 +26,7 @@ jobs:
     - name: Check zimg #安装zimg
       uses: actions/checkout@v2
       with:
-        repository: sekrit-twc/zimg #需要构建的插件的仓库
+        repository: sekrit-twc/zimg
         ref: v3.0
     - name: Install zimg # 安装zimg
       run: |
@@ -39,7 +39,7 @@ jobs:
       with:
         repository: vapoursynth/vapoursynth
 
-    - name: Compile VS
+    - name: Compile VS # 安装VS
       run: |
         ./autogen.sh
         ./configure
@@ -48,7 +48,9 @@ jobs:
     - name: Checkout Plugin
       uses: actions/checkout@v2
       with:
-        repository: dubhater/vapoursynth-mvtools #需要构建的插件的仓库
+        repository: $REPO #需要构建的插件的仓库
+      env:
+        REPO: ${{ secrets.repo }}
     - name: Compile  #开始构建
       run: |
         mkdir build && cd build
