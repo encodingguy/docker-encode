@@ -57,5 +57,5 @@ jobs:
     - name: Upload File #上传构建成果
       uses: actions/upload-artifact@v2.2.2
       with:
-        name: Compiled
+        name: ${{ secrets.repo }}-Compiled
         path: build/*.so
