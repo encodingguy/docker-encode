@@ -56,7 +56,7 @@ if fix_borders:
     fixed = awf.FixBrightnessProtect2(clip, row=[], adj_row=[], column=[], adj_column=[])
     fixed = awf.FillBorders(clip=clip, top=0, left=0,
                             right=0,
-                            bottom=0)  # For 1080p only. If you're working on 720, please consider using CropResize!
+                            bottom=0)  # for lazy people who don't bother to fix them!
     fixed = awf.bbmod(clip, top=0, bottom=0, left=0, right=0, thresh=0, blur=0)
 else:
     fixed = clip
