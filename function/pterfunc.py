@@ -10,6 +10,9 @@ import awsmfunc as awf
 import havsfunc as haf
 import vardefunc as vaf
 
+"""Most of the function are taken from somewhere else, modified or not, which are discouraged to used for other 
+encoder """
+
 
 def solarcurve(clip, color='24'):
     """Add a solar curve filter to clip, default is 24 colorspace.From https://github.com/jack2game/solarcurve"""
