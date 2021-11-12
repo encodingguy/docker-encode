@@ -10,8 +10,7 @@ import awsmfunc as awf
 import havsfunc as haf
 import vardefunc as vaf
 
-"""Most of the function are taken from somewhere else, modified or not, which are discouraged to used for other 
-encoder """
+"""Most of the function taken from somewhere else, modified or not, are discouraged to used for other encoder """
 
 
 def solarcurve(clip, color='24'):
@@ -236,30 +235,6 @@ def debandmask(clip, lo=6144, hi=12288, lothr=320, hithr=384, mrad=2):
     return core.std.Expr([clip, rmask], mexpr)
 
 
-def multy(img, multy):
-    '''A simple tool to help generate screenshots, return a list need to take screenshots. Useful for comparison'''
-    out = img.copy()
-    for i in img:
-        a = 0
-        while a <= multy - 1:
-            if a == 0:
-                out.remove(i)
-            out.append(i * multy + a)
-            a += 1
-    out.sort()
-    return (out)
-
-
-def zone_helper(file, delimiter=' ', type='crf'):
-    import csv
-    zones = ''
-    with open(file, encoding='utf-8') as zonecsv:
-        csvzones = csv.reader(zonecsv, delimiter=delimiter)
-        for row in csvzones:
-            zones += '{},{},{}={}/'.format(row[0], row[1], type, row[2])
-    print(zones)
-
-
 def fixbrdr(clip, thr=3):
     """From Ututu (https://gitlab.com/-/snippets/1986062) A tool to fix dirty lines"""
     import vsutil as vsu
@@ -350,6 +325,8 @@ def banding_extract(clip, csv_file, delimiter=' '):
     return output
 
 
+# Helper Function
+
 def zone_detect(csv_file, delimiter=' '):
     """"detect your frame if zoned and print a human readable outu
     > Usage:
@@ -370,3 +347,27 @@ def zone_detect(csv_file, delimiter=' '):
             no_zone.append(frame)
     print('zones: {}'.format(zones))
     print('no zone: {}'.format(no_zone))
+
+
+def multy(img, multy):
+    '''A simple tool to help generate screenshots, return a list need to take screenshots. Useful for comparison'''
+    out = img.copy()
+    for i in img:
+        a = 0
+        while a <= multy - 1:
+            if a == 0:
+                out.remove(i)
+            out.append(i * multy + a)
+            a += 1
+    out.sort()
+    return (out)
+
+
+def zone_helper(file, delimiter=' ', type='crf'):
+    import csv
+    zones = ''
+    with open(file, encoding='utf-8') as zonecsv:
+        csvzones = csv.reader(zonecsv, delimiter=delimiter)
+        for row in csvzones:
+            zones += '{},{},{}={}/'.format(row[0], row[1], type, row[2])
+    print(zones)
